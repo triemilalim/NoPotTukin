@@ -1,8 +1,8 @@
 # NoPotTukin
 
-For macOS:
+## For macOS:
 
-eDJPB:
+### eDJPB:
 
 Tested on macOS Catalina 10.15.5
 
@@ -32,3 +32,5 @@ How to use:
 Enjoy your life
 
 This method will runs even when your Mac sleep, make sure Power Nap is Enabled on System Preference. 
+
+If anyone can improve the python script to be able to fill the health check, I'll be very thankful.
