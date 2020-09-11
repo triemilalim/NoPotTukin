@@ -1,22 +1,25 @@
 from datetime import datetime
-
-from selenium import webdriver
-
 from time import sleep
 
-import xlrd
-from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
+import telepot
 import config
+import xlrd
 
-driver = webdriver.Chrome()
+opts = Options()
+opts.headless = True
+driver = webdriver.Chrome(options=opts)
 
-print("Mulai clock out at", datetime.now())
+
+if config.botToken != '':
+	bot = telepot.Bot(config.botToken)
+	bot.sendMessage(config.privateId, "Start clock out at {}".format(datetime.now()))
 
 # Open the website
 driver.get(config.url_edjpb)
@@ -47,11 +50,13 @@ wait.until(EC.presence_of_element_located((
 
 driver.find_element_by_xpath("//button[1]").click()
 
-print("Clock out edjpb at", datetime.now())
+if config.botToken != '':
+	bot.sendMessage(config.privateId, "Clock out edjpb at {}".format(datetime.now()))
 
 sleep(3)
-
-print("Start clock out Nadine at", datetime.now())
+if config.botToken != '':
+	driver.save_screenshot("screenshot.png")
+	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 driver.get(config.url_nadine)
 
@@ -163,6 +168,9 @@ button = driver.find_elements_by_xpath(
 button.click()
 
 sleep(3)
+if config.botToken != '':
+	driver.save_screenshot("screenshot.png")
+	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 # Buka menu Absen
 driver.get(config.url_nadine + config.absen_nadine)
@@ -187,12 +195,16 @@ btnSimpan = driver.find_elements_by_xpath(
     "//span[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
 btnSimpan.click()
 
-print("Clock out nadine at", datetime.now())
+if config.botToken != '':
+	bot.sendMessage(config.privateId, "Clock out Nadine at {}".format(datetime.now()))
 
 wait.until(EC.invisibility_of_element_located((
     By.ID, 'spinner')))
 
 sleep(3)
+if config.botToken != '':
+	driver.save_screenshot("screenshot.png")
+	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 driver.quit()
 print("All done, self destructing at", datetime.now())

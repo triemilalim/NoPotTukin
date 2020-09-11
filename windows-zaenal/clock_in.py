@@ -1,20 +1,23 @@
 from datetime import datetime
-
-from selenium import webdriver
-
 from time import sleep
 
+from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
+import telepot
 import config
 
-driver = webdriver.Chrome()
+opts = Options()
+opts.headless = True
+driver = webdriver.Chrome(options=opts)
 
-print("Start clock in edjpb at", datetime.now())
+if config.botToken != '':
+	bot = telepot.Bot(config.botToken)
+	bot.sendMessage(config.privateId, "Start clock in at {}".format(datetime.now()))
 
 # Open the website
 driver.get(config.url_edjpb)
@@ -40,7 +43,8 @@ wait.until(EC.presence_of_element_located((
 
 driver.find_element_by_link_text('Clock-in').click()
 
-print("Clock in edjpb at", datetime.now())
+if config.botToken != '':
+	bot.sendMessage(config.privateId, "Clock in edjpb at {}".format(datetime.now()))
 
 # Lapor Kesehatan
 wait.until(EC.presence_of_element_located((
@@ -56,8 +60,9 @@ btnSimpan = driver.find_elements_by_xpath(
 btnSimpan.click()
 
 sleep(3)
-
-print("Start clock in Nadine at", datetime.now())
+if config.botToken != '':
+	driver.save_screenshot("screenshot.png")
+	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 driver.get(config.url_nadine)
 
@@ -101,10 +106,16 @@ btnSimpan = driver.find_elements_by_xpath(
     "//span[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
 btnSimpan.click()
 
-print("Clock in nadine at", datetime.now())
+if config.botToken != '':
+	bot.sendMessage(config.privateId, "Clock in Nadine at {}".format(datetime.now()))
 
 wait.until(EC.invisibility_of_element_located((
     By.ID, 'spinner')))
+	
 sleep(3)
+if config.botToken != '':
+	driver.save_screenshot("screenshot.png")
+	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
+
 driver.quit()
 print("All done, self destructing at", datetime.now())
