@@ -13,11 +13,13 @@ import config
 
 opts = Options()
 opts.headless = True
+opts.addArguments("--start-fullscreen")
 driver = webdriver.Chrome(options=opts)
 
 if config.botToken != '':
-	bot = telepot.Bot(config.botToken)
-	bot.sendMessage(config.privateId, "Start clock in at {}".format(datetime.now()))
+    bot = telepot.Bot(config.botToken)
+    bot.sendMessage(config.privateId,
+                    "Start clock in at {}".format(datetime.now()))
 
 # Open the website
 driver.get(config.url_edjpb)
@@ -44,7 +46,8 @@ wait.until(EC.presence_of_element_located((
 driver.find_element_by_link_text('Clock-in').click()
 
 if config.botToken != '':
-	bot.sendMessage(config.privateId, "Clock in edjpb at {}".format(datetime.now()))
+    bot.sendMessage(config.privateId,
+                    "Clock in edjpb at {}".format(datetime.now()))
 
 # Lapor Kesehatan
 wait.until(EC.presence_of_element_located((
@@ -61,8 +64,8 @@ btnSimpan.click()
 
 sleep(3)
 if config.botToken != '':
-	driver.save_screenshot("screenshot.png")
-	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
+    driver.save_screenshot("screenshot.png")
+    bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 driver.get(config.url_nadine)
 
@@ -107,15 +110,16 @@ btnSimpan = driver.find_elements_by_xpath(
 btnSimpan.click()
 
 if config.botToken != '':
-	bot.sendMessage(config.privateId, "Clock in Nadine at {}".format(datetime.now()))
+    bot.sendMessage(config.privateId,
+                    "Clock in Nadine at {}".format(datetime.now()))
 
 wait.until(EC.invisibility_of_element_located((
     By.ID, 'spinner')))
-	
+
 sleep(3)
 if config.botToken != '':
-	driver.save_screenshot("screenshot.png")
-	bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
+    driver.save_screenshot("screenshot.png")
+    bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
 driver.quit()
 print("All done, self destructing at", datetime.now())
