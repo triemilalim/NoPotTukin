@@ -13,7 +13,8 @@ import config
 
 opts = Options()
 opts.headless = True
-opts.addArguments("--start-fullscreen")
+opts.add_argument('--disable-gpu')
+opts.add_argument("--start-fullscreen")
 driver = webdriver.Chrome(options=opts)
 
 if config.botToken != '':
@@ -31,6 +32,7 @@ pass_box = driver.find_element_by_name('password')
 # Send login information
 id_box.send_keys(config.username)
 pass_box.send_keys(config.password)
+sleep(1)
 pass_box.send_keys(Keys.RETURN)
 
 wait = WebDriverWait(driver, 30)
