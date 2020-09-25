@@ -1,2 +1,7 @@
-Executing at 23/09/2020 15:29:47,72
-Mulai clock in edjpb at 2020-09-23 15:29:50.347647
+Executing at 25/09/2020  6:07:30,58
+Mulai clock in edjpb at 2020-09-25 06:07:34.919243
+Berhasil clock in edjpb at 2020-09-25 06:07:43.405676
+Selesai lapor kesehatan at 2020-09-25 06:07:44.193572
+Pindah ke nadine at 2020-09-25 06:07:47.193795
+Selesai Clock in nadine at 2020-09-25 06:07:52.392347
+All done, self destructing at 2020-09-25 06:07:57.644143

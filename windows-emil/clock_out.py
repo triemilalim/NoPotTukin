@@ -90,16 +90,17 @@ def inputTaskLocal():
         button.click()
 
         sleep(1)
-        wait.until(EC.invisibility_of_element_located((
-            By.ID, 'spinner')))
-        button = driver.find_elements_by_xpath(
-            "//span[contains(@class, 'mat-button-wrapper') and text()='Kirim Semua']")[0]
-        button.click()
+        
+    wait.until(EC.invisibility_of_element_located((
+        By.ID, 'spinner')))
+    button = driver.find_elements_by_xpath(
+        "//span[contains(@class, 'mat-button-wrapper') and text()='Kirim Semua']")[0]
+    button.click()
 
-        sleep(1)
-        button = driver.find_elements_by_xpath(
-            "//span[contains(@class, 'mat-button-wrapper') and text()='OK']")[0]
-        button.click()
+    sleep(1)
+    button = driver.find_elements_by_xpath(
+        "//span[contains(@class, 'mat-button-wrapper') and text()='OK']")[0]
+    button.click()
 
 
 def clockOut():
