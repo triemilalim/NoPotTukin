@@ -8,90 +8,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
-import telepot
 import config
 import xlrd
-import pandas
 
-
-opts = Options()
-opts.headless = True
-opts.add_argument('--disable-gpu')
-opts.add_argument("--start-fullscreen")
-driver = webdriver.Chrome(options=opts)
+driver = webdriver.Chrome()
 wait = WebDriverWait(driver, 30)
-
-if config.botToken != '':
-    bot = telepot.Bot(config.botToken)
-
-
-def inputTask(data):
-    if data[1] == data[1]:
-        # Add new Task
-        sleep(1)
-        wait.until(EC.invisibility_of_element_located((
-            By.ID, 'spinner')))
-        addTask = driver.find_elements_by_xpath(
-            "//mat-icon[text()='add']")[0]
-        addTask.click()
-
-        # Tusi / non Tusi
-        wait.until(EC.presence_of_element_located((
-            By.XPATH, "//mat-radio-button[contains(@class, 'mat-radio-button')]")))
-        wait.until(EC.invisibility_of_element_located((
-            By.ID, 'spinner')))
-        rdTusi = driver.find_elements_by_xpath(
-            "//div[contains(@class, 'mat-radio-label-content')]")
-        if data[0] == 'T':
-            rdTusi[0].click()
-        else:
-            rdTusi[1].click()
-
-        # Nama Tugas
-        field = driver.find_elements_by_xpath(
-            "//input[@formcontrolname='Tugas']")[0]
-        field.send_keys(data[3])
-
-        # Rincian Tugas
-        field = driver.find_elements_by_xpath(
-            "//textarea[@formcontrolname='Rincian']")[0]
-        field.send_keys(data[3])
-
-        # Jam Mulai
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='HH']")[0]
-        field.clear()
-        field.send_keys(str(data[1])[0:2])
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='MM']")[0]
-        field.clear()
-        field.send_keys(str(data[1])[3:6])
-
-        # Jam Selesai
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='HH']")[1]
-        field.clear()
-        field.send_keys(str(data[2])[0:2])
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='MM']")[1]
-        field.clear()
-        field.send_keys(str(data[2])[3:6])
-
-        # Norma Waktu
-        field = driver.find_elements_by_xpath(
-            "//input[@formcontrolname='NormaWaktu']")[0]
-        field.send_keys(data[5])
-
-        # Simpan
-        button = driver.find_elements_by_xpath(
-            "//span[contains(@class, 'mat-button-wrapper') and text()='Simpan']")[0]
-        button.click()
-
 
 def inputTaskLocal():
     # Buka file
     workbook = xlrd.open_workbook(
-        "HitungJamTask.xlsx", on_demand=True)
+        config.localTaskxls, on_demand=True)
     worksheet = workbook.sheet_by_index(0)
 
     for row in range(0, worksheet.nrows):
@@ -163,11 +89,22 @@ def inputTaskLocal():
             "//span[contains(@class, 'mat-button-wrapper') and text()='Simpan']")[0]
         button.click()
 
+        sleep(1)
+        
+    wait.until(EC.invisibility_of_element_located((
+        By.ID, 'spinner')))
+    button = driver.find_elements_by_xpath(
+        "//span[contains(@class, 'mat-button-wrapper') and text()='Kirim Semua']")[0]
+    button.click()
+
+    sleep(1)
+    button = driver.find_elements_by_xpath(
+        "//span[contains(@class, 'mat-button-wrapper') and text()='OK']")[0]
+    button.click()
+
 
 def clockOut():
-    if config.botToken != '':
-        bot.sendMessage(config.privateId,
-                        "Start clock out at {}".format(datetime.now()))
+    print("Mulai clock out at", datetime.now())
 
     # Open the website
     driver.get(config.url_edjpb)
@@ -197,15 +134,13 @@ def clockOut():
 
     driver.find_element_by_xpath("//button[1]").click()
 
-    if config.botToken != '':
-        bot.sendMessage(config.privateId,
-                        "Clock out edjpb at {}".format(datetime.now()))
+
+    print("Selesai clock out edjpb at", datetime.now())
 
     sleep(3)
-    if config.botToken != '':
-        driver.save_screenshot("screenshot.png")
-        bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
+    print("Pindah ke nadine at", datetime.now())
+    
     # Buka Nadine
     driver.get(config.url_nadine)
 
@@ -230,29 +165,10 @@ def clockOut():
     driver.get(config.url_nadine + config.task_nadine)
 
     # Loop input task
-    # Jika pakai google sheet
-    if config.sheetId != '':
-        sh.apply(inputTask, axis=1)
     # Jika menggunakan excel
-    elif config.localTaskxls != '':
-        inputTaskLocal()
-
-    sleep(1)
-    wait.until(EC.invisibility_of_element_located((
-        By.ID, 'spinner')))
-    button = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='Kirim Semua']")[0]
-    button.click()
-
-    sleep(1)
-    button = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='OK']")[0]
-    button.click()
+    inputTaskLocal()
 
     sleep(3)
-    if config.botToken != '':
-        driver.save_screenshot("screenshot.png")
-        bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
     # Buka menu Absen
     driver.get(config.url_nadine + config.absen_nadine)
@@ -277,35 +193,15 @@ def clockOut():
         "//span[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
     btnSimpan.click()
 
-    if config.botToken != '':
-        bot.sendMessage(config.privateId,
-                        "Clock out Nadine at {}".format(datetime.now()))
+    print("Selesai Clock in nadine at", datetime.now())
 
     wait.until(EC.invisibility_of_element_located((
         By.ID, 'spinner')))
 
     sleep(3)
-    if config.botToken != '':
-        driver.save_screenshot("screenshot.png")
-        bot.sendPhoto(config.privateId, open('screenshot.png', 'rb'))
 
     driver.quit()
     print("All done, self destructing at", datetime.now())
 
 
-# Mulai absen jika total norma waktu >400
-while True:
-    print ('sini')
-    if config.sheetId != '':
-        print (f'https://docs.google.com/spreadsheets/d/{config.sheetId}/export?format=csv')
-        sh = pandas.read_csv(
-            f'https://docs.google.com/spreadsheets/d/{config.sheetId}/export?format=csv')
-        print ('sini')
-        if int(sh['Total'][0]) > 400:
-            clockOut()
-            break
-        else:
-            print('waiting...')
-            sleep(10)
-    else:
-        clockOut()
+clockOut()
