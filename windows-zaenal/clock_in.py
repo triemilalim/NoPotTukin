@@ -16,11 +16,16 @@ opts.headless = True
 opts.add_argument('--disable-gpu')
 opts.add_argument("--start-fullscreen")
 driver = webdriver.Chrome(options=opts)
+isWFH = True
 
 if config.botToken != '':
     bot = telepot.Bot(config.botToken)
+    response = bot.getUpdates()
+    if len(response)>0:
+        if response[len(response)-1]['message']['text'].lower() == 'wfo' or response[len(response)-1]['message']['text'].lower() == 'wao':
+            isWFH = False
     bot.sendMessage(config.privateId,
-                    "Start clock in at {}".format(datetime.now()))
+                    "Start clock in at %s as %s" % (format(datetime.now()), 'WFH' if isWFH else 'WaO'))
 
 # Open the website
 driver.get(config.url_edjpb)
@@ -100,8 +105,13 @@ btnClockIn.click()
 
 wait.until(EC.presence_of_element_located((
     By.XPATH, '//app-dialog-absen')))
-wfhChecklist = driver.find_elements_by_xpath(
-    "//div[contains(@class, 'mat-radio-label-content') and text()='WFH']")[0]
+if isWFH:
+    wfhChecklist = driver.find_elements_by_xpath(
+        "//div[contains(@class, 'mat-radio-label-content') and text()='WFH']")[0]
+else:
+    wfhChecklist = driver.find_elements_by_xpath(
+        "//div[contains(@class, 'mat-radio-label-content') and text()='Non WFH']")[0]
+
 wfhChecklist.click()
 sehatChecklist = driver.find_elements_by_xpath(
     "//div[contains(@class, 'mat-radio-label-content') and text()='Sehat']")[0]

@@ -295,17 +295,13 @@ def clockOut():
 
 # Mulai absen jika total norma waktu >400
 while True:
-    print ('sini')
     if config.sheetId != '':
-        print (f'https://docs.google.com/spreadsheets/d/{config.sheetId}/export?format=csv')
         sh = pandas.read_csv(
             f'https://docs.google.com/spreadsheets/d/{config.sheetId}/export?format=csv')
-        print ('sini')
         if int(sh['Total'][0]) > 400:
             clockOut()
             break
         else:
-            print('waiting...')
             sleep(10)
     else:
         clockOut()
