@@ -16,6 +16,8 @@ import pandas
 
 opts = Options()
 opts.headless = True
+opts.add_argument('--disable-gpu')
+opts.add_argument("--start-fullscreen")
 driver = webdriver.Chrome(options=opts)
 wait = WebDriverWait(driver, 30)
 
@@ -177,6 +179,7 @@ def clockOut():
     # Send login information
     id_box.send_keys(config.username)
     pass_box.send_keys(config.password)
+    sleep(1)
     pass_box.send_keys(Keys.RETURN)
 
     wait.until(EC.presence_of_element_located((
