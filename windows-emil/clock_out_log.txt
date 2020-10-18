@@ -1,0 +1,6 @@
+Executing at 24/09/2020 17:32:37,11
+Mulai clock out at 2020-09-24 17:32:39.572529
+Selesai clock out edjpb at 2020-09-24 17:32:45.259428
+Pindah ke nadine at 2020-09-24 17:32:48.259621
+Selesai Clock in nadine at 2020-09-24 17:33:19.001547
+All done, self destructing at 2020-09-24 17:33:25.275100
