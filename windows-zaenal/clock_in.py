@@ -69,6 +69,14 @@ btnSimpan = driver.find_elements_by_xpath(
     "//button[contains(@class, 'btn-warning') and text()='Simpan']")[0]
 btnSimpan.click()
 
+# set WaO
+if not isWFH:
+    wait.until(EC.presence_of_element_located((
+        By.XPATH, '//a[contains(text(), "WfH")]')))
+    btnSimpan = driver.find_elements_by_xpath(
+        "//a[contains(text(), 'WfH')")[0]
+    btnSimpan.click()
+
 sleep(3)
 if config.botToken != '':
     driver.save_screenshot("screenshot.png")
