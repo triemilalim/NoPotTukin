@@ -14,7 +14,7 @@ import config
 opts = Options()
 opts.headless = True
 opts.add_argument('--disable-gpu')
-opts.add_argument("--start-fullscreen")
+opts.add_argument("--window-size=1366,768")
 driver = webdriver.Chrome(options=opts)
 isWFH = True
 
@@ -71,11 +71,8 @@ btnSimpan.click()
 
 # set WaO
 if not isWFH:
-    wait.until(EC.presence_of_element_located((
-        By.XPATH, '//a[contains(text(), "WfH")]')))
-    btnSimpan = driver.find_elements_by_xpath(
-        "//a[contains(text(), 'WfH')")[0]
-    btnSimpan.click()
+    sleep(1)
+    driver.find_element_by_partial_link_text('WFH').click()
 
 sleep(3)
 if config.botToken != '':

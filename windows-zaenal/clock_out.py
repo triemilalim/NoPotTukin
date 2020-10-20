@@ -17,7 +17,7 @@ import pandas
 opts = Options()
 opts.headless = True
 opts.add_argument('--disable-gpu')
-opts.add_argument("--start-fullscreen")
+opts.add_argument("--window-size=1366,768")
 driver = webdriver.Chrome(options=opts)
 wait = WebDriverWait(driver, 30)
 isWFH = True
