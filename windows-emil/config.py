@@ -1,12 +1,8 @@
-url_nadine = 'https://office.kemenkeu.go.id/'
-absen_nadine = 'nadine/absen'
-task_nadine = 'nadine/mytask'
+url_nadine = 'https://oa.kemenkeu.go.id/'
 url_edjpb = 'https://edjpb.kemenkeu.go.id/login.php'
+url_oa = 'https://oa.kemenkeu.go.id/kehadiran'
 
-# Username nadinde dan edjpb (harus sama)
 username = 'putyourNIPhere'
-# Password nadine dan edjpb (harus sama)
-password = 'putyourpasswordhere'
+password = 'putyouredjpbpasswordhere'
+passwordOA = 'putyourOApasswordhere'
 
-# File lokal berisi task
-localTaskxls = 'C:\\NoPotTukin.git\\windows-emil\\task.xlsx'
