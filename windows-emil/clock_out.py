@@ -3,112 +3,37 @@ from time import sleep
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
+import authenticator as a
+import os
 import config
-import xlrd
 
 driver = webdriver.Chrome()
 wait = WebDriverWait(driver, 30)
 
-def inputTaskLocal():
-    # Buka file
-    workbook = xlrd.open_workbook(
-        config.localTaskxls, on_demand=True)
-    worksheet = workbook.sheet_by_index(0)
+def get_code():
+    cd = (a.data
+          .ClientFile(
+            os.environ['AUTHENTICATOR_PASSWORD'])
+          .load(
+            os.path.expanduser('~/.authenticator/authenticator.data')
+          )[0])
+    return (a.hotp.HOTP()
+            .generate_code_from_time(
+                 cd.shared_secret(),
+                 code_length=cd.password_length(),
+                 period=cd.period())[0])
 
-    for row in range(0, worksheet.nrows):
-        if not worksheet.cell_value(row, 3):
-            break
-
-        # Add new Task
-        sleep(1)
-        wait.until(EC.invisibility_of_element_located((
-            By.ID, 'spinner')))
-        addTask = driver.find_elements_by_xpath(
-            "//mat-icon[text()='add']")[0]
-        addTask.click()
-
-        # Tusi / non Tusi
-        wait.until(EC.presence_of_element_located((
-            By.XPATH, "//mat-radio-button[contains(@class, 'mat-radio-button')]")))
-        wait.until(EC.invisibility_of_element_located((
-            By.ID, 'spinner')))
-        rdTusi = driver.find_elements_by_xpath(
-            "//div[contains(@class, 'mat-radio-label-content')]")
-        if worksheet.cell_value(row, 0) == 'T':
-            rdTusi[0].click()
-        else:
-            rdTusi[1].click()
-
-        # Nama Tugas
-        field = driver.find_elements_by_xpath(
-            "//input[@formcontrolname='Tugas']")[0]
-        field.send_keys(worksheet.cell_value(row, 3))
-
-        # Rincian Tugas
-        field = driver.find_elements_by_xpath(
-            "//textarea[@formcontrolname='Rincian']")[0]
-        field.send_keys(worksheet.cell_value(row, 3))
-
-        # Jam Mulai
-        jamMulai = int(worksheet.cell_value(row, 1) * 24 * 3600)
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='HH']")[0]
-        field.clear()
-        field.send_keys(jamMulai//3600)
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='MM']")[0]
-        field.clear()
-        field.send_keys((jamMulai % 3600)//60)
-
-        # Jam Selesai
-        jamSelesai = int(worksheet.cell_value(row, 2) * 24 * 3600)
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='HH']")[1]
-        field.clear()
-        field.send_keys(jamSelesai//3600)
-        field = driver.find_elements_by_xpath(
-            "//input[@placeholder='MM']")[1]
-        field.clear()
-        field.send_keys((jamSelesai % 3600)//60)
-
-        # Rincian Tugas
-        field = driver.find_elements_by_xpath(
-            "//input[@formcontrolname='NormaWaktu']")[0]
-        if worksheet.cell_type(row, 4) == xlrd.XL_CELL_EMPTY:
-            worksheet._cell_values[row][4] = 0
-        minus = int(worksheet.cell_value(row, 4))
-        field.send_keys((jamSelesai-jamMulai)//60-minus)
-
-        # Simpan
-        button = driver.find_elements_by_xpath(
-            "//span[contains(@class, 'mat-button-wrapper') and text()='Simpan']")[0]
-        button.click()
-
-        sleep(1)
-        
-    wait.until(EC.invisibility_of_element_located((
-        By.ID, 'spinner')))
-    button = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='Kirim Semua']")[0]
-    button.click()
-
-    sleep(1)
-    button = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='OK']")[0]
-    button.click()
-
-
-def clockOut():
+def clockOutEdjpb():
+    
     print("Mulai clock out at", datetime.now())
 
     # Open the website
     driver.get(config.url_edjpb)
-
+    
     # Locate id and password
     id_box = driver.find_element_by_name('username')
     pass_box = driver.find_element_by_name('password')
@@ -136,72 +61,69 @@ def clockOut():
 
 
     print("Selesai clock out edjpb at", datetime.now())
-
-    sleep(3)
-
+    driver.quit()
+    print("All done, self destructing at", datetime.now())
+    
+    
+def clockOutOA():
+    
     print("Pindah ke nadine at", datetime.now())
     
     # Buka Nadine
     driver.get(config.url_nadine)
 
-    if driver.current_url == config.url_nadine:
-        driver.get(config.url_nadine + 'index/index/')
-        wait.until(EC.presence_of_element_located((
-            By.ID, 'username')))
-        inputUser = driver.find_elements_by_xpath("//input[@id='username']")[0]
-        inputUser.click()
-        inputUser.send_keys(config.username)
-        inputUser = driver.find_elements_by_xpath("//input[@id='password']")[0]
-        inputUser.click()
-        inputUser.send_keys(config.password)
-        inputUser = driver.find_elements_by_xpath(
-            "//button[@class='login100-form-btn']")[0]
-        inputUser.click()
+    # mustinya pake wait ini, tapi gak sukses jadi terpaksa pake sleep
+    # wait.until(EC.presence_of_element_located((
+        # By.XPATH, "//div[@id='container-3']/toolbar/div/div[2]/div/button")))
+
+    sleep(4)
+
+    loginButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/div/div[2]/div/button")[0]
+    loginButton.click()
 
     wait.until(EC.presence_of_element_located((
-        By.XPATH, "//div[contains(@class, 'title')]")))
+        By.ID, 'username')))
+    inputUser = driver.find_elements_by_xpath("//input[@id='username']")[0]
+    inputUser.click()
+    inputUser.send_keys(config.username)
+    inputUser = driver.find_elements_by_xpath("//input[@id='password']")[0]
+    inputUser.click()
+    inputUser.send_keys(config.passwordOA)
 
-    # Buka menu Task
-    driver.get(config.url_nadine + config.task_nadine)
+    inputUser.send_keys(Keys.RETURN)
+    
+    sleep(2)
 
-    # Loop input task
-    # Jika menggunakan excel
-    inputTaskLocal()
+    try:
+        authCode = get_code()
+        inputUser = driver.find_elements_by_xpath("//input[@id='code']")[0]
+        inputUser.click()
+        inputUser.send_keys(authCode)
+        inputUser.send_keys(Keys.RETURN)
+    except:
+        pass
+
+    sleep(2)
+    # xpath tombol clock:
+    clockButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/mat-toolbar/div/div[2]/div/clockin/button/span/div")[0]
+    clockButton.click()
+    sleep(2)
+
+    yakinButton = driver.find_elements_by_xpath("//mat-dialog-container[@id='mat-dialog-1']/app-dialog-absen/div/div[2]/button")[0]
+    yakinButton.click()
+
+    print("Selesai Clock out nadine at", datetime.now())
+
 
     sleep(3)
 
-    # Buka menu Absen
-    driver.get(config.url_nadine + config.absen_nadine)
 
-    wait.until(EC.invisibility_of_element_located((
-        By.ID, 'spinner')))
+try:
+    clockOutOA()
+except:
+    print("error saat clock out oa") 
 
-    btnClockIn = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='Clock Out']")[0]
-    btnClockIn.click()
-
-    wait.until(EC.presence_of_element_located((
-        By.XPATH, '//app-dialog-absen')))
-    wfhChecklist = driver.find_elements_by_xpath(
-        "//div[contains(@class, 'mat-radio-label-content') and text()='WFH']")[0]
-    wfhChecklist.click()
-    sehatChecklist = driver.find_elements_by_xpath(
-        "//div[contains(@class, 'mat-radio-label-content') and text()='Sehat']")[0]
-    sehatChecklist.click()
-
-    btnSimpan = driver.find_elements_by_xpath(
-        "//span[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
-    btnSimpan.click()
-
-    print("Selesai Clock in nadine at", datetime.now())
-
-    wait.until(EC.invisibility_of_element_located((
-        By.ID, 'spinner')))
-
-    sleep(3)
-
-    driver.quit()
-    print("All done, self destructing at", datetime.now())
-
-
-clockOut()
+try:
+    clockOutEdjpb()
+except:
+    print("error saat clock out edjpb") 
