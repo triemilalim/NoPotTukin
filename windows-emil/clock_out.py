@@ -11,9 +11,6 @@ import authenticator as a
 import os
 import config
 
-driver = webdriver.Chrome()
-wait = WebDriverWait(driver, 30)
-
 def get_code():
     cd = (a.data
           .ClientFile(
@@ -28,11 +25,6 @@ def get_code():
                  period=cd.period())[0])
 
 def clockOutEdjpb():
-    
-    print("Mulai clock out at", datetime.now())
-
-    # Open the website
-    driver.get(config.url_edjpb)
     
     # Locate id and password
     id_box = driver.find_element_by_name('username')
@@ -59,23 +51,10 @@ def clockOutEdjpb():
 
     driver.find_element_by_xpath("//button[1]").click()
 
+    sleep(3)
 
-    print("Selesai clock out edjpb at", datetime.now())
-    driver.quit()
-    print("All done, self destructing at", datetime.now())
-    
-    
 def clockOutOA():
     
-    print("Pindah ke nadine at", datetime.now())
-    
-    # Buka Nadine
-    driver.get(config.url_nadine)
-
-    # mustinya pake wait ini, tapi gak sukses jadi terpaksa pake sleep
-    # wait.until(EC.presence_of_element_located((
-        # By.XPATH, "//div[@id='container-3']/toolbar/div/div[2]/div/button")))
-
     sleep(4)
 
     loginButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/div/div[2]/div/button")[0]
@@ -112,18 +91,35 @@ def clockOutOA():
     yakinButton = driver.find_elements_by_xpath("//mat-dialog-container[@id='mat-dialog-1']/app-dialog-absen/div/div[2]/button")[0]
     yakinButton.click()
 
-    print("Selesai Clock out nadine at", datetime.now())
-
-
     sleep(3)
 
 
-try:
-    clockOutOA()
-except:
-    print("error saat clock out oa") 
 
 try:
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 30)
+    # Buka Nadine
+    driver.get(config.url_nadine)
+    print("Mulai clock out nadine at", datetime.now())
+    clockOutOA()
+    print("Selesai Clock out nadine at", datetime.now())
+except Exception as e:
+    print("error saat clock out oa: ", e) 
+finally:
+    driver.quit()
+
+try:
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 30)
+    # Buka Edjpb
+    print("Mulai clock out edjpb at", datetime.now())
+    driver.get(config.url_edjpb)
+    print("Selesai clock out edjpb at", datetime.now())
     clockOutEdjpb()
-except:
-    print("error saat clock out edjpb") 
+except Exception as ee:
+    print("error saat clock out edjpb: ", ee) 
+finally:
+    driver.quit()
+
+
+print("All done, self destructing at", datetime.now())

@@ -11,10 +11,6 @@ import authenticator as a
 import os
 import config
 
-driver = webdriver.Chrome()
-wait = WebDriverWait(driver, 30)
-
-
 def get_code():
     cd = (a.data
           .ClientFile(
@@ -29,11 +25,7 @@ def get_code():
                  period=cd.period())[0])
 
 def clockInEdjpb():
-    print("Mulai clock in edjpb at", datetime.now())
-
-    # Open the website
-    driver.get(config.url_edjpb)
-
+    
     # Locate id and password
     id_box = driver.find_element_by_name('username')
     pass_box = driver.find_element_by_name('password')
@@ -72,20 +64,10 @@ def clockInEdjpb():
     print("Selesai lapor kesehatan at", datetime.now())
 
     sleep(3)
-    driver.quit()
-    print("All done, self destructing at", datetime.now())
 
 def clockInOA():
-    print("Pindah ke nadine at", datetime.now())
 
-    wait = WebDriverWait(driver, 30)
-
-    driver.get(config.url_nadine)
-
-    # wait.until(EC.presence_of_element_located((
-        # By.XPATH, "//div[@id='container-3']/toolbar/div/div[2]/div/button")))
-
-    sleep(2)
+    sleep(4)
 
     loginButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/div/div[2]/div/button")[0]
     loginButton.click()
@@ -116,23 +98,40 @@ def clockInOA():
     # xpath tombol clock:
     clockButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/mat-toolbar/div/div[2]/div/clockin/button/span/div")[0]
     clockButton.click()
-    sleep(1)
+    sleep(2)
 
     yakinButton = driver.find_elements_by_xpath("//mat-dialog-container[@id='mat-dialog-1']/app-dialog-absen/div/div[2]/button")[0]
     yakinButton.click()
-
-    print("Selesai Clock in nadine at", datetime.now())
 
     sleep(3)
 
 
 
 try:
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 30)
+    # Buka Nadine
+    driver.get(config.url_nadine)
+    print("Mulai clock in nadine at", datetime.now())
     clockInOA()
-except:
-    print("error saat clock in oa") 
+    print("Selesai Clock in nadine at", datetime.now())
+except Exception as e:
+    print("error saat clock in oa: ", e) 
+finally:
+    driver.quit()
     
 try:
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 30)
+    # Buka Edjpb
+    print("Mulai clock in edjpb at", datetime.now())
+    driver.get(config.url_edjpb)
+    print("Selesai clock in edjpb at", datetime.now())
     clockInEdjpb()
-except:
-    print("error saat clock in edjpb") 
+except Exception as ee:
+    print("error saat clock in edjpb: ", ee) 
+finally:
+    driver.quit()
+
+
+print("All done, self destructing at", datetime.now())
