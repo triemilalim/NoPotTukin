@@ -25,7 +25,7 @@ def get_code():
                  period=cd.period())[0])
 
 def clockInEdjpb():
-    
+
     # Locate id and password
     id_box = driver.find_element_by_name('username')
     pass_box = driver.find_element_by_name('password')
@@ -95,6 +95,14 @@ def clockInOA():
         pass
     
     sleep(2)
+
+    try:
+        tutupNotif = driver.find_elements_by_xpath("mat-dialog-container[@id='mat-dialog-0']/app-alert-absen/div/div[2]/button[2]/span")[0]
+        tutupNotif.click()
+        sleep(2)
+    except:
+        pass
+
     # xpath tombol clock:
     clockButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/mat-toolbar/div/div[2]/div/clockin/button/span/div")[0]
     clockButton.click()
