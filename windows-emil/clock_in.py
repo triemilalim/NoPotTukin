@@ -100,7 +100,9 @@ def clockInOA():
         tutupNotif = driver.find_elements_by_xpath("mat-dialog-container[@id='mat-dialog-0']/app-alert-absen/div/div[2]/button[2]/span")[0]
         tutupNotif.click()
         sleep(2)
+        print('notif udah ditutup')
     except:
+        print('gak ada notif, lanjut...')
         pass
 
     # xpath tombol clock:
@@ -108,8 +110,12 @@ def clockInOA():
     clockButton.click()
     sleep(2)
 
-    yakinButton = driver.find_elements_by_xpath("//mat-dialog-container[@id='mat-dialog-1']/app-dialog-absen/div/div[2]/button")[0]
+    # yakinButton = driver.find_elements_by_xpath("//button[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
+    # yakinButton = driver.find_elements_by_xpath("//button[contains(@class, 'mat-button-wrapper') and text()='Ya, Yakin!']")[0]
+    yakinButton = driver.find_elements_by_xpath("//mat-dialog-container/app-dialog-absen/div/div[2]/button[1]")[0]
     yakinButton.click()
+    # /html/body/div[3]/div[2]/div/mat-dialog-container/app-dialog-absen/div/div[2]/button[1]
+    # Ya, Yakin! class mat-button-wrapper
 
     sleep(3)
 
@@ -127,15 +133,15 @@ except Exception as e:
     print("error saat clock in oa: ", e) 
 finally:
     driver.quit()
-    
+
 try:
     driver = webdriver.Chrome()
     wait = WebDriverWait(driver, 30)
     # Buka Edjpb
     print("Mulai clock in edjpb at", datetime.now())
     driver.get(config.url_edjpb)
-    print("Selesai clock in edjpb at", datetime.now())
     clockInEdjpb()
+    print("Selesai clock in edjpb at", datetime.now())
 except Exception as ee:
     print("error saat clock in edjpb: ", ee) 
 finally:

@@ -88,7 +88,7 @@ def clockOutOA():
     clockButton.click()
     sleep(2)
 
-    yakinButton = driver.find_elements_by_xpath("//mat-dialog-container[@id='mat-dialog-1']/app-dialog-absen/div/div[2]/button")[0]
+    yakinButton = driver.find_elements_by_xpath("//mat-dialog-container/app-dialog-absen/div/div[2]/button[1]")[0]
     yakinButton.click()
 
     sleep(3)
@@ -114,8 +114,8 @@ try:
     # Buka Edjpb
     print("Mulai clock out edjpb at", datetime.now())
     driver.get(config.url_edjpb)
-    print("Selesai clock out edjpb at", datetime.now())
     clockOutEdjpb()
+    print("Selesai clock out edjpb at", datetime.now())
 except Exception as ee:
     print("error saat clock out edjpb: ", ee) 
 finally:
