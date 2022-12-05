@@ -131,6 +131,8 @@ try:
     print("Selesai Clock in nadine at", datetime.now())
 except Exception as e:
     print("error saat clock in oa: ", e) 
+    print("coba lagi ") 
+    clockInOA()
 finally:
     driver.quit()
 
@@ -144,6 +146,8 @@ try:
     print("Selesai clock in edjpb at", datetime.now())
 except Exception as ee:
     print("error saat clock in edjpb: ", ee) 
+    print("coba lagi ")
+    clockInEdjpb()
 finally:
     driver.quit()
 

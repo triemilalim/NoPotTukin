@@ -105,6 +105,8 @@ try:
     print("Selesai Clock out nadine at", datetime.now())
 except Exception as e:
     print("error saat clock out oa: ", e) 
+    print("coba lagi ")
+    clockOutOA()
 finally:
     driver.quit()
 
@@ -118,6 +120,8 @@ try:
     print("Selesai clock out edjpb at", datetime.now())
 except Exception as ee:
     print("error saat clock out edjpb: ", ee) 
+    print("coba lagi ")
+    clockOutEdjpb()
 finally:
     driver.quit()
 
