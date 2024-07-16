@@ -110,20 +110,20 @@ except Exception as e:
 finally:
     driver.quit()
 
-try:
-    driver = webdriver.Chrome()
-    wait = WebDriverWait(driver, 30)
-    # Buka Edjpb
-    print("Mulai clock out edjpb at", datetime.now())
-    driver.get(config.url_edjpb)
-    clockOutEdjpb()
-    print("Selesai clock out edjpb at", datetime.now())
-except Exception as ee:
-    print("error saat clock out edjpb: ", ee) 
-    print("coba lagi ")
-    clockOutEdjpb()
-finally:
-    driver.quit()
+# try:
+#     driver = webdriver.Chrome()
+#     wait = WebDriverWait(driver, 30)
+#     # Buka Edjpb
+#     print("Mulai clock out edjpb at", datetime.now())
+#     driver.get(config.url_edjpb)
+#     clockOutEdjpb()
+#     print("Selesai clock out edjpb at", datetime.now())
+# except Exception as ee:
+#     print("error saat clock out edjpb: ", ee) 
+#     print("coba lagi ")
+#     clockOutEdjpb()
+# finally:
+#     driver.quit()
 
 
 print("All done, self destructing at", datetime.now())

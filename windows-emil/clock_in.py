@@ -97,6 +97,7 @@ def clockInOA():
     sleep(2)
 
     try:
+        sleep(2)
         tutupNotif = driver.find_elements_by_xpath("mat-dialog-container[@id='mat-dialog-0']/app-alert-absen/div/div[2]/button[2]/span")[0]
         tutupNotif.click()
         sleep(2)
@@ -104,8 +105,18 @@ def clockInOA():
     except:
         print('gak ada notif, lanjut...')
         pass
+    
+    driver.maximize_window()
 
     # xpath tombol clock:
+    # try this next time:
+    # WebElement element = driver.findElement(By.<locator>);
+    # JavascriptExecutor executor = (JavascriptExecutor)driver;
+    # executor.executeScript("arguments[0].click()", element)`
+    
+    wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'cdk-overlay-backdrop')))
+
+    sleep(2)
     clockButton = driver.find_elements_by_xpath("//div[@id='container-3']/toolbar/mat-toolbar/div/div[2]/div/clockin/button/span/div")[0]
     clockButton.click()
     sleep(2)
@@ -119,8 +130,6 @@ def clockInOA():
 
     sleep(3)
 
-
-
 try:
     driver = webdriver.Chrome()
     wait = WebDriverWait(driver, 30)
@@ -131,25 +140,26 @@ try:
     print("Selesai Clock in nadine at", datetime.now())
 except Exception as e:
     print("error saat clock in oa: ", e) 
-    print("coba lagi ") 
+    driver.get(config.url_nadine)
     clockInOA()
 finally:
     driver.quit()
 
-try:
-    driver = webdriver.Chrome()
-    wait = WebDriverWait(driver, 30)
-    # Buka Edjpb
-    print("Mulai clock in edjpb at", datetime.now())
-    driver.get(config.url_edjpb)
-    clockInEdjpb()
-    print("Selesai clock in edjpb at", datetime.now())
-except Exception as ee:
-    print("error saat clock in edjpb: ", ee) 
-    print("coba lagi ")
-    clockInEdjpb()
-finally:
-    driver.quit()
+# try:
+#     driver = webdriver.Chrome()
+#     wait = WebDriverWait(driver, 30)
+#     # Buka Edjpb
+#     print("Mulai clock in edjpb at", datetime.now())
+#     driver.get(config.url_edjpb)
+#     clockInEdjpb()
+#     print("Selesai clock in edjpb at", datetime.now())
+# except Exception as ee:
+#     print("error saat clock in edjpb: ", ee) 
+#     print("coba lagi ")
+#     driver.get(config.url_edjpb)
+#     clockInEdjpb()
+# finally:
+#     driver.quit()
 
 
 print("All done, self destructing at", datetime.now())

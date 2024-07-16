@@ -1,8 +1,5 @@
-Executing at Fri 10/21/2022  6:40:55.92
-Mulai clock in nadine at 2022-10-21 06:40:59.178152
-error saat clock in oa:  Message: element click intercepted: Element <div fxlayout="row" fxlayoutalign="center center" class="clock-items" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center; align-items: center;">...</div> is not clickable at point (667, 32). Other element would receive the click: <div class="cdk-overlay-backdrop cdk-overlay-dark-backdrop cdk-overlay-backdrop-showing"></div>
-  (Session info: chrome=104.0.5112.102)
+Executing at Tue 06/20/2023  6:46:53.17
+Mulai clock in nadine at 2023-06-20 06:46:58.998140
+gak ada notif, lanjut...
+error saat clock in oa:  Message: 
 
-Mulai clock in edjpb at 2022-10-21 06:41:14.224555
-Selesai clock in edjpb at 2022-10-21 06:41:14.562978
-All done, self destructing at 2022-10-21 06:41:16.635128
